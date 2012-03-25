@@ -8,6 +8,7 @@ class MoviesController < ApplicationController
 
   def index
     sort = params[:sort] || session[:sort]
+    director = params[:director] || session[:director]
     case sort
     when 'title'
       ordering,@title_header = {:order => :title}, 'hilite'
@@ -27,7 +28,12 @@ class MoviesController < ApplicationController
       session[:ratings] = @selected_ratings
       redirect_to :sort => sort, :ratings => @selected_ratings and return
     end
-    @movies = Movie.find_all_by_rating(@selected_ratings.keys, ordering)
+
+    if params[:director] != session[:director]
+      session[:director] = director
+      redirect_to :sort => sort, :ratings => @selected_ratings, :director => director and return
+    end
+    @movies = Movie.all(:conditions => { :ratings => @selected_ratings, :director => director }, :order => ordering)
   end
 
   def new
@@ -58,4 +64,11 @@ class MoviesController < ApplicationController
     redirect_to movies_path
   end
 
+  def search_tmdb
+    @movies = Movie.find_in_tmdb(params[:search_terms])
+  end
+
+  def find_with_same_director
+
+  end
 end
