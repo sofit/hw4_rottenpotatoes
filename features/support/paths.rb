@@ -13,10 +13,13 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
 
-      when /^the edit page for "(.+)"$/i
-        edit_movie_path(Movie.find_by_title($1))
-      when /^the details page for "(.+)"$/i
-        movie_path(Movie.find_by_title($1))
+      when /^the (edit|details) page for "(.+)"$/i
+        movie = Movie.find_by_title($2)
+        $1 == "edit" ? edit_movie_path(movie) : movie_path(movie)
+
+      when /^the Similar Movies page for "(.+)"$/i
+        search_similar_path(:id => Movie.find_by_title($1).id)
+
       when /^the home\s?page$/
         '/movies'
 

@@ -1,0 +1,17 @@
+%h1 Movies by director
+
+%table#movies
+  %thead
+    %tr
+      %th Title
+      %th Rating
+      %th Release Date
+      %th Director
+      %th More Info
+  %tbody
+    - @movies.each do |movie|
+      %tr
+        %td= movie.title
+        %td= movie.rating
+        %td= movie.release_date
+        %td= movie.director
